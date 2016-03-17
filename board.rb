@@ -2,6 +2,8 @@ require_relative 'manifest'
 
 class Board
 
+  attr_reader :grid
+
 	def initialize(populate = false)
 		create_grid(populate)
 	end
