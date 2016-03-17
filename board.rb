@@ -9,7 +9,7 @@ class Board
 
   def move(start,end_pos)
     if self[*start].empty?
-      raise "Start position is empty!"
+      raise ArgumentError.new("Start position is empty!")
     else
       current_piece = self[*start]
       x_end, y_end = end_pos
@@ -17,7 +17,7 @@ class Board
         self[*end_pos] = current_piece
         self[*start] = EmptySpace.new
       else
-        raise "Invalid end position!"
+        raise ArgumentError.new("Invalid end position!")
       end
     end
   end
@@ -47,11 +47,8 @@ if $0 == __FILE__
   b[0,0] = Piece.new
   d.render
   puts "New Piece object at [0,0]\n"
-  start = [0,0]
-  end_pos = [0,1]
-  b.move(start,end_pos)
-  d.render
-  p "[0,0]: #{b[0,0].class}"
-  p "[0,1]: #{b[0,1].class}"
-  p "[1,0]: #{b[1,0].class}"
+  while true
+    d.get_input
+    d.render
+  end
 end

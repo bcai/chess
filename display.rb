@@ -38,12 +38,12 @@ class Display
     when :ctrl_c, :quit
       exit 0
     when :return, :space
-      if !@selected
+      if !@selected 
         @selected_pos = @cursor_pos
         @selected = true
       else
         @board.move(@selected_pos,@cursor_pos)
-        puts "Made a move from #{@selected_pos} to #{@cursor_pos}"
+        @selected_pos = nil
         @selected = false
       end
     when :left, :right, :up, :down
@@ -82,6 +82,8 @@ class Display
   def colors_for(i, j)
     if [i, j] == @cursor_pos
       bg = :blue
+    elsif [i, j] == @selected_pos
+      bg = :blue
     elsif (i + j).odd?
       bg = :light_blue
     else
@@ -92,7 +94,7 @@ class Display
 
 
   def render
-    # system.("clear")
+    system("clear")
     print "  "
     8.times {|idx| print " #{idx} "}
     print "\n"
