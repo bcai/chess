@@ -76,7 +76,8 @@ class Display
   end
 
 
-
+  # all methods below will stay in Display class, all methods above will be
+  # moved to HumanPlayer class when implmented.
 
 
   def colors_for(i, j)

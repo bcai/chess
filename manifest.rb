@@ -1,3 +1,5 @@
 require_relative 'display'
 require_relative 'piece'
 require_relative 'pieces/empty_space'
+require_relative 'pieces/slideable'
+require_relative 'pieces/stepable'

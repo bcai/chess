@@ -1,10 +1,9 @@
 require_relative 'manifest'
 
 class Board
-  attr_accessor :grid
 
-	def initialize
-		@grid = Array.new(8){Array.new(8){EmptySpace.new}}
+	def initialize(populate = false)
+		create_grid(populate)
 	end
 
   def move(start,end_pos)
@@ -37,6 +36,13 @@ class Board
     @grid[x][y] = value
   end
 
+  protected
+  def create_grid(populate)
+    @grid = Array.new(8){Array.new(8){EmptySpace.new}}
+    return unless populate
+    #populate with black/white chess pieces
+    #...
+  end
 end
 
 if $0 == __FILE__
