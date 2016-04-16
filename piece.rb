@@ -1,3 +1,5 @@
+# functionality common to all pieces 
+
 class Piece
 
   def initialize
@@ -12,4 +14,9 @@ class Piece
     false
   end
 
+  # returns an Array of positions a Piece can move to 
+  # overridden in slideable/stepable modules
+  def moves
+
+  end
 end
