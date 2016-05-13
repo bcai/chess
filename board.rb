@@ -1,24 +1,35 @@
+require "byebug"
 require_relative 'manifest'
 
 class Board
 
   attr_reader :grid
 
-	def initialize(populate = false)
-		create_grid(populate)
+	def initialize
+		create_grid()
 	end
 
   def move(start,end_pos)
-    if self[*start].empty?
-      raise ArgumentError.new("Start position is empty!")
+    if self[start].empty?
+      begin
+        raise ArgumentError.new
+      rescue ArgumentError
+        # puts "Start position is empty! Try again."
+      end
     else
-      current_piece = self[*start]
+      current_piece = self[start]
       x_end, y_end = end_pos
-      if x_end.between?(0,7) && y_end.between?(0,7)
-        self[*end_pos] = current_piece
-        self[*start] = EmptySpace.new
+
+      if (x_end.between?(0,7) && y_end.between?(0,7) && valid_move?(start,end_pos))
+        self[end_pos] = current_piece
+        current_piece.pos = end_pos
+        self[start] = EmptySpace.new
       else
-        raise ArgumentError.new("Invalid end position!")
+        begin
+          raise ArgumentError.new
+        rescue ArgumentError 
+          # puts "Invalid Move! Try again."
+        end
       end
     end
   end
@@ -28,22 +39,32 @@ class Board
     x.between?(0,7) && y.between?(0,7) ? true : false
   end
 
-  def [](*pos)
-    x,y = pos[0],pos[1]
+  def [](pos)
+    x,y = pos
     @grid[x][y]
   end
 
-  def []=(*pos,value)
-    x,y = pos[0],pos[1]
+  def []=(pos,value)
+    x,y = pos
     @grid[x][y] = value
   end
 
-  protected
-  def create_grid(populate)
+
+  private
+
+  def create_grid 
     @grid = Array.new(8){Array.new(8){EmptySpace.new}}
-    return unless populate
+
     #populate with black/white chess pieces
-    #...
+    @grid[7][0] = Rook.new(self, [7,0], "white")
+    @grid[7][2] = Bishop.new(self, [7,2], "white")
+    @grid[7][3] = Queen.new(self, [7,3], "white")
+    @grid[7][5] = Bishop.new(self, [7,5], "white")
+    @grid[7][7] = Rook.new(self, [7,7], "white")
+  end
+
+  def valid_move?(start,end_pos)
+    self[start].moves.include?(end_pos) ? true : false
   end
 end
 
@@ -52,9 +73,8 @@ if $0 == __FILE__
   d = Display.new(b)
   d.render
   puts "Initialize board\n"
-  b[0,0] = Piece.new
   d.render
-  puts "New Piece object at [0,0]\n"
+
   while true
     d.get_input
     d.render
