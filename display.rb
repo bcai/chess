@@ -2,12 +2,15 @@ require 'colorize'
 require "io/console"
 
 class Display
+
+  attr_accessor :notifications
   
   def initialize(board)
-    @cursor_pos = [0,0] #default pos
+    @cursor_pos = [4,3] #default pos
     @selected_pos = nil
     @selected = false
     @board = board
+    @notifications = {}
   end
 
     KEYMAP = {
@@ -42,10 +45,10 @@ class Display
         @selected_pos = @cursor_pos
         @selected = true
       else
-        @board.move(@selected_pos,@cursor_pos)
         @selected_pos = nil
         @selected = false
       end
+      @cursor_pos
     when :left, :right, :up, :down
       update_pos(MOVES[key])
       nil
@@ -82,20 +85,33 @@ class Display
 
   def colors_for(i, j)
     if [i, j] == @cursor_pos
-      bg = :blue
+      bg = :light_green
     elsif [i, j] == @selected_pos
-      bg = :blue
+      bg = :light_green
     elsif (i + j).odd?
       bg = :light_blue
     else
-      bg = :light_red
+      bg = :white
     end
-    { background: bg, color: :white }
+    { background: bg, color: :black }
+  end
+
+  def reset!
+    @notifications.delete(:error)
+  end
+
+  def uncheck!
+    @notifications.delete(:check)
+  end
+
+  def set_check!
+    @notifications[:check] = "Check!"
   end
 
 
   def render
     system("clear")
+    puts "Arrow keys to move, space/enter to select.\n\n"
     print "  "
     8.times {|idx| print " #{idx} "}
     print "\n"
@@ -106,6 +122,10 @@ class Display
         print "#{piece.to_s.colorize(color_options)}"
       end
       print "\n"
+    end
+
+    @notifications.each do |key, val|
+      puts "#{val}"
     end
   end
 end
