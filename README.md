@@ -1,9 +1,5 @@
 # Chess
 
-[Chess live][github]
-
-[github]: http://github.com/bcai/chess
-
 Chess is a command-line game built on Ruby using OOP principles and uses `io/console` to take in user inputs through the keyboard.
 
 ## Features & Implementation
@@ -18,6 +14,7 @@ Chess uses a `Board` class to hold `Piece` objects. Pieces are categorized into 
 `Pawn` is a special piece of its own that has its own set of movement rules. Therefore it does not inherit from any of the modules defined.
 
 Based on the piece, say the `Queen`, a set of directional coordinates will be applied to the `#move_dirs` method in the `Queen` class. In this case, `#move_dirs` will contain the sum of both `#diagonal_dirs` and `#horizontal_dirs`.
+
 
 ```javascript
 module Slideable
@@ -101,9 +98,8 @@ def move(turn_color, start, end_pos)
   end
 ```
 
-An additional method, `#in_check? will check whether the potential move will cause the player to go into check given that an opposing piece within reach of the player's King can make a game-winning move, and will prevent the player from making such a move by filtering `#moves` into an even further filtered array of `#valid_moves` (all moves that can be made, that will not cause a check).
+An additional method, `#in_check?` checks whether a check has occurred. Checking this condition requires the current `Board` object to be duplicated so that moves can be made on the separate duped board. All these moves made on the duped board will check whether the potential move will cause the player to go into check, and will prevent the player from making such a move by filtering `#moves` into an even further filtered array of `#valid_moves`
 
-`#valid_moves` method:
 
 ```javascript
   def valid_moves
@@ -121,9 +117,8 @@ An additional method, `#in_check? will check whether the potential move will cau
 
 ### Checkmate
 
-Checking whether a checkmate has occurred requires the current `Board` object to be duplicated so that moves can be made on the separate duped board to check whether the player can make a move that will take the King out of check. If no moves can be generate which can enable the player to safely bring the checked King out of check, a checkmate has resulted.
+Checking whether a player is in check makes use of `#in_check?` to check whether the player can make a move that will take the King out of check. If no moves can be generate which can enable the player to safely bring the checked King out of check, a checkmate has resulted.
 
-`Board#checkmate?` method:
 
 ```javascript
 def checkmate?(color)
